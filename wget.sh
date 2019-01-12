@@ -14,7 +14,7 @@ function make_cmd(){
 		cmd+=" -e ${proxy_prefix}=${3}"
 	fi
 
-	echo ${cmd}
+	INFO_SW ${cmd}
 }
 
 function FILE_WGET(){
@@ -27,8 +27,8 @@ function FILE_WGET(){
 	result=$(FILE_CHECK "${out_file}" "${md5_path}")
 
 	if(($result > 0));then
-		INFO "${out_name} is already install."
-		return
+		INFO_SW "${out_name} is already install."
+		return 1
 	fi
 
 	mkdir -p `dirname ${out_file}`
@@ -38,8 +38,10 @@ function FILE_WGET(){
 
 	result=$(FILE_CHECK "${out_file}" "${md5_path}")
 	if(($result > 0));then
-		INFO "${out_name} is installed."
+		INFO_SW "${out_name} is installed."
+		return 0
 	else
 		ERROR "${out_name} not install!"
+		return -1
 	fi
 }
