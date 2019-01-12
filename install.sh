@@ -1,9 +1,9 @@
 #!/bin/bash
 
-if [ `whoami` != "root" ];then
-	echo "please run as root!!"
-	exit
-fi
+# if [ `whoami` != "root" ];then
+# 	echo "please run as root!!"
+# 	exit
+# fi
 
 if [ "$1" == "" ];then
 	echo "please input output!"

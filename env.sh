@@ -60,23 +60,6 @@ function FILE_CHECK(){
 	echo "0"
 }
 
-function INSTALL_ICON(){
-	src_desktop=${1}
-	dts_desktop=${2}
-	icon_path=${3}
-	exec_path=${4}
-
-	cp ${src_desktop} ${dts_desktop}
-
-	if [ -d "${dts_desktop}" ];then
-		name=$(basename ${src_desktop})
-		dts_desktop="${dts_desktop}/${name}"
-	fi
-
-	sed -i s/'\${icon}'/${icon_path//"/"/"\/"}/g ${dts_desktop}
-	sed -i s/'\${path}'/${exec_path//"/"/"\/"}/g ${dts_desktop}
-}
-
 function ADD_CORE_SW(){
 	CORE_SW_LIST+=" $1"
 }
@@ -89,6 +72,27 @@ function ADD_PPA(){
 	PPA_LIST+=" $1"
 }
 
+function ADD_PPA_KEY(){
+	PPA_KEY_LIST+=" $1"
+}
+
+function IS_EXTRACT_OK(){
+	out_dir=$1
+	out_name=$2
+
+	if [ -f "$1/.${out_name}.extract" ];then
+		return 0
+	fi
+	return -1
+}
+
+function DO_EXTRACT_OK(){
+	out_dir=$1
+	out_name=$2
+
+	touch $1/.${out_name}.extract
+}
+
 HTTP_PROXY="http://127.0.01:1080/"
 HTTPS_PROXY="http://127.0.01:1080/"
 TOP=$(pwd)
@@ -96,6 +100,7 @@ TOP=$(pwd)
 SW_LIST=""
 PPA_LIST=""
 CORE_SW_LIST=""
+PPA_KEY_LIST=""
 
 version=$(lsb_release -i | awk '{print $3}')
 if [[ "$version" == "Ubuntu" ]]; then
@@ -106,4 +111,7 @@ if [[ "$version" == "Ubuntu" ]]; then
 	elif [[ "$version" == "14.04" ]]; then
 		UBUNTU_14=true
 	fi
+	sudo ls / > /dev/null
 fi
+
+. script/ubuntu_icon.sh
